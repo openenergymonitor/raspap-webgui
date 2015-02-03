@@ -34,19 +34,24 @@ The line appears in /etc/sudoers like this –
 add: 
 ```
 www-data ALL=(ALL) NOPASSWD:/sbin/ifdown wlan0,/sbin/ifup wlan0,/bin/cat /etc/wpa_supplicant/wpa_supplicant.conf,/bin/cp /tmp/wifidata /etc/wpa_supplicant/wpa_supplicant.conf,/sbin/wpa_cli scan_results,/sbin/wpa_cli scan,/bin/cp /tmp/hostapddata /etc/hostapd/hostapd.conf,/etc/init.d/hostapd start,/etc/init.d/hostapd stop,/etc/init.d/dnsmasq start,/etc/init.d/dnsmasq stop,/bin/cp /tmp/dhcpddata /etc/dnsmasq.conf`
+```
 
-
+```
   $ cd /var/www
   $ sudo git clone https://github.com/glynhudson/raspap-webgui.git
   $ cd raspap-webgui
   $ sudo cp * /var/www
   $ sudo chown -R www-data:www-data /var/www
+```
+Add wifi check script to run every 5 min to check wifi is connected. 
 
+BY DEFAULT WIFI WILL ONLY CONNECT IF ETHERENT IS DISCONNECTED
+
+```
   $ sudo cp /var/www/wifi-check /usr/local/bin/wifi-check
   $ sudo chmod +x /usr/local/bin/wifi-check
   $ sudo crontab -e
 ```  
-
 add:
 
   `$  */5 * * * * /usr/local/bin/wifi-check > /tmp/wificheck.log 2>&1`
