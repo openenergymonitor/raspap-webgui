@@ -1,0 +1,34 @@
+#!/bin/bash
+
+# Run as root
+
+
+sudo apt-get install lighttpd php5-cgi
+sudo lighty-enable-mod fastcgi-php
+sudo service lighttpd force-reload
+
+
+if ! sudo grep -Fxq "www-data ALL=(ALL) NOPASSWD:/sbin/ifdown wlan0,/sbin/ifup wlan0,/bin/cat /etc/wpa_supplicant/wpa_supplicant.conf,/bin/cp /tmp/wifidata /etc/wpa_supplicant/wpa_supplicant.conf,/sbin/wpa_cli scan_results,/sbin/wpa_cli scan,/bin/cp /tmp/hostapddata /etc/hostapd/hostapd.conf,/etc/init.d/hostapd start,/etc/init.d/hostapd stop,/etc/init.d/dnsmasq start,/etc/init.d/dnsmasq stop,/bin/cp /tmp/dhcpddata /etc/dnsmasq.conf" /etc/sudoers ; then
+	sudo echo "www-data ALL=(ALL) NOPASSWD:/sbin/ifdown wlan0,/sbin/ifup wlan0,/bin/cat /etc/wpa_supplicant/wpa_supplicant.conf,/bin/cp /tmp/wifidata /etc/wpa_supplicant/wpa_supplicant.conf,/sbin/wpa_cli scan_results,/sbin/wpa_cli scan,/bin/cp /tmp/hostapddata /etc/hostapd/hostapd.conf,/etc/init.d/hostapd start,/etc/init.d/hostapd stop,/etc/init.d/dnsmasq start,/etc/init.d/dnsmasq stop,/bin/cp /tmp/dhcpddata /etc/dnsmasq.conf" >> /etc/sudoers
+fi
+
+
+
+
+
+sudo cp /home/pi/raspap-webgui/* /var/www
+sudo chown -R www-data:www-data /var/www
+sudo cp /home/pi/raspap-webgui/wifi-check /usr/local/bin/wifi-check
+sudo chmod +x /usr/local/bin/wifi-check
+
+echo "add conjob to check wifi is connected every 5min"
+#write out current crontab
+crontab -l > /home/pi/mycron
+#echo new cron into cron file
+if ! grep -Fxq "*/5 * * * * /usr/local/bin/wifi-check > /tmp/wificheck.log 2>&1" /home/pi/mycron ; then 
+	echo "*/5 * * * * /usr/local/bin/wifi-check > /tmp/wificheck.log 2>&1" >> home/pi/mycron
+	#install new cron file
+	crontab /home/pi/mycron
+fi
+
+rm /home/pi/mycron
