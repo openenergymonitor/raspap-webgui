@@ -1,6 +1,10 @@
 raspap-webgui
 =============
 
+# Update: [Replaced by Emoncms Wifi Module](https://github.com/emoncms/wifi)
+
+# Archive >
+
 ![WiFi_Config.png](WiFi_Config.png)
 
 
